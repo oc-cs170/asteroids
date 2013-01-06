@@ -4,6 +4,7 @@ import pygame
 import random
 
 from ship import Ship
+from asteroid import Asteroid
 
 WINDOW_TITLE = 'Asteroids'
 WINDOW_WIDTH = 1024
@@ -52,6 +53,10 @@ class Asteroids(object):
         self.ship = Ship(self.screen)
         self.hero = pygame.sprite.Group()
         # self.hero.add(self.ship)
+        self.asteroids = []
+        for i in range(3):
+            self.asteroids.append(Asteroid(self.screen.get_size()))
+        self.asteroids.append(Asteroid(self.screen.get_size(), 2))
 
         running = True
         while running:
@@ -66,9 +71,13 @@ class Asteroids(object):
             self.screen.blit(self.background, (0, 0))
             # self.hero.draw(self.screen)
             self.screen.blit(self.ship.image, self.ship.rect)
+            for asteroid in self.asteroids:
+                self.screen.blit(asteroid.image, asteroid.rect)
+                asteroid.update(self.screen.get_size())
+
             pygame.display.flip()
 
-            # Update game objects
+            # Update ship
             self.ship.update()
 
 
