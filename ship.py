@@ -2,7 +2,19 @@ import pygame
 
 
 class Ship(pygame.sprite.Sprite):
+    """A ship class that is aware of pygame.
+
+    A yellow isosceles triangle that smoothly rotates about its center.
+    Coordinates are the center of the smallest rectangle that encloses
+    the ship.
+    Angle is measured from 0 on the cartesian plane (3 o'clock).
+    """
     def __init__(self, screen):
+        """Create a ship object.
+
+        Args:
+            screen: a pygame surface, a pointer to the display buffer
+        """
         # Call inherited initialization
         super(pygame.sprite.Sprite, self).__init__()
 
@@ -22,9 +34,19 @@ class Ship(pygame.sprite.Sprite):
         self.angle = 0  # Initial angle is cartesian coordinates 0
 
     def update(self):
-        """"""
+        """Update the position and orientation of the ship.
+
+        Should be called every frame, by the main game loop to allow the
+        ship to move. Movements consist of x, y translation, and cartesian
+        rotation (0 degrees = 3 o'clock).
+        """
+        # Currently the ship just revolves constantly in 10 degree increments
         self.angle += 10
-        self.image = pygame.transform.rotate(self.art, self.angle)
         if self.angle == 360:
             self.angle = 0
+
+        # Set the image and rect, based on instance parameters
+        # The image is a transform of the ship "art"
+        self.image = pygame.transform.rotate(self.art, self.angle)
+        # The rect is a rectangle centered on the x, y of the ship
         self.rect = self.image.get_rect(center=self.rect.center)

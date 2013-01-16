@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-# Asteroids
+
+"""Main file with game loop for Asteroids.
+
+Uses Asteroid, Ship, and Alien(?) from external modules.
+"""
+
 import pygame
 import random
 
@@ -12,6 +17,7 @@ WINDOW_HEIGHT = 768
 
 
 class Asteroids(object):
+    """Create a game of Asteroids."""
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(WINDOW_TITLE)
@@ -49,6 +55,11 @@ class Asteroids(object):
         return space
 
     def play(self):
+        """Start Asteroid program.
+
+        Puts ship in the middle of the screen, generates some asteroids
+        and gives them some random velocities.
+        """
         # Game objects
         self.ship = Ship(self.screen)
         self.hero = pygame.sprite.Group()
@@ -73,7 +84,7 @@ class Asteroids(object):
             self.screen.blit(self.ship.image, self.ship.rect)
             for asteroid in self.asteroids:
                 self.screen.blit(asteroid.image, asteroid.rect)
-                asteroid.update(self.screen.get_size())
+                asteroid.update()
 
             pygame.display.flip()
 
