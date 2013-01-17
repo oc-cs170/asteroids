@@ -33,7 +33,7 @@ class Asteroid(pygame.sprite.Sprite):
 
         # Initial location and velocity
         self.rect.left = random.randint(0, screen_size[0] - self.rect.width)
-        self.vx = 0
+        self.vx = random.randint(-3, 3)
         self.vy = random.randint(1, 3)
 
     def update(self):
@@ -47,3 +47,16 @@ class Asteroid(pygame.sprite.Sprite):
         # Vertical "leading-edge" screen wrapping
         if self.rect.bottom > self.screen_height:
             self.rect.top = 0
+
+	elif self.rect.top < 0:
+	    self.rect.bottom = self.screen_height
+	    
+	# Horizontal "leading-edge" screen wrapping
+	elif self.rect.right > self.screen_width:
+	    self.rect.left = 0
+	
+	elif self.rect.left < 0:
+	    self.rect.right = self.screen_width
+	    
+	    
+	    
