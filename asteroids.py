@@ -28,8 +28,12 @@ class Asteroids(object):
         self.screen.fill(pygame.Color('Black'))
         pygame.display.flip()
         self.background = self.create_background(WINDOW_WIDTH, WINDOW_HEIGHT)
-
-        # Use a clock to control frame rate
+        
+        # for ship movement
+	self.angle = 0
+        self.moving = 0
+        
+	# Use a clock to control frame rate
         self.clock = pygame.time.Clock()
 
     def create_background(self, width, height):
@@ -78,6 +82,20 @@ class Asteroids(object):
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     running = False
 
+		if event.type == pygame.KEYDOWN:
+		    if event.key == pygame.K_RIGHT:
+		        self.angle = -10
+		    if event.key == pygame.K_LEFT:
+		        self.angle = 10
+		    if event.key == pygame.K_UP:
+		        self.moving = .8
+		    
+		if event.type == pygame.KEYUP:
+		    if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
+		        self.angle = 0
+		    if event.key == pygame.K_UP:			    
+		        self.moving = 0
+	
             # Draw the scene
             self.screen.blit(self.background, (0, 0))
             # self.hero.draw(self.screen)
@@ -85,11 +103,16 @@ class Asteroids(object):
             for asteroid in self.asteroids:
                 self.screen.blit(asteroid.image, asteroid.rect)
                 asteroid.update()
-
-            pygame.display.flip()
+		
+	    font = pygame.font.SysFont("monospace", 15)
+            ship_angle = font.render("Angle " + str(self.ship.angle), 2, (255,255,0))
+	    self.screen.blit(ship_angle, (0, 28))
+	    ship_radians = font.render("Radians " + str(self.ship.radians), 2, (255,255,0))
+            self.screen.blit(ship_radians, (0, 14))
+	    pygame.display.flip()
 
             # Update ship
-            self.ship.update()
+            self.ship.update(self.angle, self.moving)
 
 
 if __name__ == '__main__':

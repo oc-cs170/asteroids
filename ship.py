@@ -1,4 +1,5 @@
 import pygame
+import math
 
 
 class Ship(pygame.sprite.Sprite):
@@ -21,6 +22,8 @@ class Ship(pygame.sprite.Sprite):
         # Establish the size and location of the ship
         self.rect = pygame.Rect(0, 0, 35, 21)
         self.rect.center = screen.get_rect().center
+        self.screen_width, self.screen_height = screen.get_rect().size
+        
 
         # Draw a simple triangle
         self.art = pygame.Surface(self.rect.size)
@@ -32,21 +35,65 @@ class Ship(pygame.sprite.Sprite):
         # First version of the image is the permanent ship graphic
         self.image = self.art
         self.angle = 0  # Initial angle is cartesian coordinates 0
+        self.radians = 0
+        self.velocity = 0
+        self.xv = 0
+        self.yv = 0
 
-    def update(self):
+    def update(self, angle, moving):
         """Update the position and orientation of the ship.
 
         Should be called every frame, by the main game loop to allow the
         ship to move. Movements consist of x, y translation, and cartesian
         rotation (0 degrees = 3 o'clock).
         """
-        # Currently the ship just revolves constantly in 10 degree increments
-        self.angle += 10
-        if self.angle == 360:
-            self.angle = 0
+         
+        self.angle += angle
+        if self.angle < 0:
+            self.angle += 360
+        elif self.angle == 360:
+            self.angle = 0 
+        self.radians = math.radians(self.angle)
+        if moving:
+            xv = moving * math.cos(self.radians)
+            yv = moving * math.sin(self.radians)
+            xv += self.xv
+            yv += self.yv
+            theta = math.atan2(yv, xv)
+            self.velocity = math.sqrt(xv**2 + yv**2)
+            self.velocity = min(self.velocity, 10)
+            self.xv = self.velocity * math.cos(theta)
+            self.yv = self.velocity * math.sin(theta)
+            print self.xv, self.yv
+        
+        
+        self.rect.move_ip(self.xv, -self.yv)
+        
+        # Vertical "leading-edge" screen wrapping
+        if self.rect.bottom > self.screen_height:
+            self.rect.top = 0
 
+	elif self.rect.top < 0:
+	    self.rect.bottom = self.screen_height
+	    
+	# Horizontal "leading-edge" screen wrapping
+	elif self.rect.right > self.screen_width:
+	    self.rect.left = 0
+	
+	elif self.rect.left < 0:
+	    self.rect.right = self.screen_width
+            
+            #self.rect.move_ip(0,-5.5)
         # Set the image and rect, based on instance parameters
         # The image is a transform of the ship "art"
         self.image = pygame.transform.rotate(self.art, self.angle)
         # The rect is a rectangle centered on the x, y of the ship
         self.rect = self.image.get_rect(center=self.rect.center)
+
+
+
+
+
+
+
+

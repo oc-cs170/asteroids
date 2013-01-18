@@ -32,9 +32,35 @@ class Asteroid(pygame.sprite.Sprite):
                            self.rect.width / 2)
 
         # Initial location and velocity
-        self.rect.left = random.randint(0, screen_size[0] - self.rect.width)
-        self.vx = random.randint(-3, 3)
-        self.vy = random.randint(1, 3)
+        # which side the asteroid will be along
+        side = random.randint(1,4)
+        # top
+        if side == 1:
+            self.rect.left = random.randint(0, screen_size[0] - self.rect.width)
+            self.vy = random.randint(1, 3)
+            self.vx = random.randint(-3, 3)
+            
+        # bottom
+        elif side == 2:
+            self.rect.bottom = self.screen_height
+            self.rect.left = random.randint(0, screen_size[0] - self.rect.width)
+            self.vy = random.randint(-3, -1)
+            self.vx = random.randint(-3, 3)
+            
+        # left
+        elif side == 3:
+            self.rect.top = random.randint(0, screen_size[1] - self.rect.height)
+            self.vx = random.randint(1, 3)
+            self.vy = random.randint(-3, 3)
+            
+        # right
+        elif side == 4:
+            self.rect.right = self.screen_width
+            self.rect.top = random.randint(0, screen_size[1] - self.rect.height)
+            self.vx = random.randint(-3, -1)
+            self.vy = random.randint(-3, 3)
+        
+        
 
     def update(self):
         """Update the position of the asteroid.
