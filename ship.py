@@ -33,6 +33,10 @@ class Ship(pygame.sprite.Sprite):
         self.image = self.art
         self.angle = 0  # Initial angle is cartesian coordinates 0
 
+        # Movement
+        self.vx = 1
+        self.vy = 0
+
     def update(self):
         """Update the position and orientation of the ship.
 
@@ -40,13 +44,34 @@ class Ship(pygame.sprite.Sprite):
         ship to move. Movements consist of x, y translation, and cartesian
         rotation (0 degrees = 3 o'clock).
         """
-        # Currently the ship just revolves constantly in 10 degree increments
-        self.angle += 10
-        if self.angle == 360:
-            self.angle = 0
+
+        # movement 
+        self.rect.move_ip(self.vx, self.vy)
+        screen_width, screen_height = (1024, 738)
+
+        if (self.rect.center[0] < 0):
+            self.rect.move_ip(screen_width, 0)
+        elif (self.rect.center[0] >= screen_width):
+            self.rect.move_ip(-screen_width, 0)
+
+        if (self.rect.center[1] <0):
+            self.rect.move_ip(0, screen_height)
+        elif (self.rect.center[1] >= screen_height):
+            self.rect.move_ip(0, -screen_height)
 
         # Set the image and rect, based on instance parameters
         # The image is a transform of the ship "art"
         self.image = pygame.transform.rotate(self.art, self.angle)
         # The rect is a rectangle centered on the x, y of the ship
         self.rect = self.image.get_rect(center=self.rect.center)
+
+    def turnLeft(self):
+        self.angle += 15
+        if self.angle > 360:
+            self.angle = 15
+
+    def turnRight(self):
+        self.angle -= 15 
+        if self.angle < 0:
+            self.angle = 345
+

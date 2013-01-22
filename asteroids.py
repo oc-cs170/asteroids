@@ -13,7 +13,7 @@ from asteroid import Asteroid
 
 WINDOW_TITLE = 'Asteroids'
 WINDOW_WIDTH = 1024
-WINDOW_HEIGHT = 768
+WINDOW_HEIGHT = 738
 
 
 class Asteroids(object):
@@ -65,7 +65,7 @@ class Asteroids(object):
         self.hero = pygame.sprite.Group()
         # self.hero.add(self.ship)
         self.asteroids = []
-        for i in range(3):
+        for i in range(5):
             self.asteroids.append(Asteroid(self.screen.get_size()))
         self.asteroids.append(Asteroid(self.screen.get_size(), 2))
 
@@ -77,6 +77,13 @@ class Asteroids(object):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     running = False
+                    break
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        self.ship.turnLeft()
+                    if event.key == pygame.K_RIGHT:
+                        self.ship.turnRight()
+
 
             # Draw the scene
             self.screen.blit(self.background, (0, 0))
