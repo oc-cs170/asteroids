@@ -61,29 +61,28 @@ class Ship(pygame.sprite.Sprite):
             yv += self.yv
             theta = math.atan2(yv, xv)
             self.velocity = math.sqrt(xv**2 + yv**2)
-            self.velocity = min(self.velocity, 10)
+            self.velocity = min(self.velocity, 20)
             self.xv = self.velocity * math.cos(theta)
             self.yv = self.velocity * math.sin(theta)
-            print self.xv, self.yv
         
         
         self.rect.move_ip(self.xv, -self.yv)
+        
         
         # Vertical "leading-edge" screen wrapping
         if self.rect.bottom > self.screen_height:
             self.rect.top = 0
 
-	elif self.rect.top < 0:
-	    self.rect.bottom = self.screen_height
-	    
-	# Horizontal "leading-edge" screen wrapping
-	elif self.rect.right > self.screen_width:
-	    self.rect.left = 0
-	
-	elif self.rect.left < 0:
-	    self.rect.right = self.screen_width
+        elif self.rect.top < 0:
+            self.rect.bottom = self.screen_height
+        
+        # Horizontal "leading-edge" screen wrapping
+        elif self.rect.right > self.screen_width:
+            self.rect.left = 0
+        
+        elif self.rect.left < 0:
+            self.rect.right = self.screen_width
             
-            #self.rect.move_ip(0,-5.5)
         # Set the image and rect, based on instance parameters
         # The image is a transform of the ship "art"
         self.image = pygame.transform.rotate(self.art, self.angle)

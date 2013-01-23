@@ -32,7 +32,6 @@ class Asteroid(pygame.sprite.Sprite):
                            self.rect.width / 2)
 
         # Initial location and velocity
-        # which side the asteroid will be along
         side = random.randint(1,4)
         # top
         if side == 1:
@@ -74,15 +73,15 @@ class Asteroid(pygame.sprite.Sprite):
         if self.rect.bottom > self.screen_height:
             self.rect.top = 0
 
-	elif self.rect.top < 0:
-	    self.rect.bottom = self.screen_height
-	    
-	# Horizontal "leading-edge" screen wrapping
-	elif self.rect.right > self.screen_width:
-	    self.rect.left = 0
-	
-	elif self.rect.left < 0:
-	    self.rect.right = self.screen_width
-	    
-	    
-	    
+        elif self.rect.top < 0:
+            self.rect.bottom = self.screen_height
+            
+        # Horizontal "leading-edge" screen wrapping
+        elif self.rect.right > self.screen_width:
+            self.rect.left = 0
+        
+        elif self.rect.left < 0:
+            self.rect.right = self.screen_width
+        
+        
+        

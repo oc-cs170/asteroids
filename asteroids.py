@@ -10,6 +10,7 @@ import random
 
 from ship import Ship
 from asteroid import Asteroid
+from bullet import Bullet
 
 WINDOW_TITLE = 'Asteroids'
 WINDOW_WIDTH = 1024
@@ -29,11 +30,11 @@ class Asteroids(object):
         pygame.display.flip()
         self.background = self.create_background(WINDOW_WIDTH, WINDOW_HEIGHT)
         
-        # for ship movement
-	self.angle = 0
+        # For ship movement
+        self.angle = 0
         self.moving = 0
         
-	# Use a clock to control frame rate
+    # Use a clock to control frame rate
         self.clock = pygame.time.Clock()
 
     def create_background(self, width, height):
@@ -66,13 +67,19 @@ class Asteroids(object):
         """
         # Game objects
         self.ship = Ship(self.screen)
+        self.bullets = []
         self.hero = pygame.sprite.Group()
         # self.hero.add(self.ship)
         self.asteroids = []
         for i in range(3):
             self.asteroids.append(Asteroid(self.screen.get_size()))
         self.asteroids.append(Asteroid(self.screen.get_size(), 2))
-
+        
+        self.bullets = []
+        
+        # For on screen text
+        font = pygame.font.SysFont("monospace", 15)
+        
         running = True
         while running:
             self.clock.tick(30)  # Max frames per second
@@ -82,37 +89,63 @@ class Asteroids(object):
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     running = False
 
-		if event.type == pygame.KEYDOWN:
-		    if event.key == pygame.K_RIGHT:
-		        self.angle = -10
-		    if event.key == pygame.K_LEFT:
-		        self.angle = 10
-		    if event.key == pygame.K_UP:
-		        self.moving = .8
-		    
-		if event.type == pygame.KEYUP:
-		    if event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
-		        self.angle = 0
-		    if event.key == pygame.K_UP:			    
-		        self.moving = 0
-	
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.angle = -10
+                if event.key == pygame.K_LEFT:
+                    self.angle = 10
+                if event.key == pygame.K_UP:
+                    self.moving = .5
+                if event.key == pygame.K_SPACE:
+                    self.bullets.append(Bullet(self.screen.get_size(), self.ship.angle, self.ship.rect.center))
+        
+        
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT or  event.key == pygame.K_LEFT:
+                    self.angle = 0
+                if event.key == pygame.K_UP:
+                    self.moving = 0
+            
             # Draw the scene
             self.screen.blit(self.background, (0, 0))
             # self.hero.draw(self.screen)
             self.screen.blit(self.ship.image, self.ship.rect)
+            
+            for bullet in self.bullets:
+                self.screen.blit(bullet.art,bullet.rect)
+                if bullet.update():
+                    self.bullets.remove(bullet)
+                contact = bullet.rect.collidelist(self.asteroids)
+                if  contact >= 0:
+                    del self.asteroids[contact]
+                    self.bullets.remove(bullet)
+                    
             for asteroid in self.asteroids:
                 self.screen.blit(asteroid.image, asteroid.rect)
                 asteroid.update()
-		
-	    font = pygame.font.SysFont("monospace", 15)
-            ship_angle = font.render("Angle " + str(self.ship.angle), 2, (255,255,0))
-	    self.screen.blit(ship_angle, (0, 28))
-	    ship_radians = font.render("Radians " + str(self.ship.radians), 2, (255,255,0))
-            self.screen.blit(ship_radians, (0, 14))
-	    pygame.display.flip()
-
+                # If asteroid collides with the ship
+                if asteroid.rect.colliderect(self.ship.rect):
+                    self.screen.blit(font.render("BOOM", 2, (255,255,0)), (512,384))
+            
             # Update ship
             self.ship.update(self.angle, self.moving)
+            
+            for asteroid in self.asteroids:
+                if self.ship.rect.colliderect(asteroid.rect):
+                    self.screen.blit(font.render("BOOM", 2, (255,255,0)), (512,384))
+                    # running = False
+                
+                
+            #Displays direction of ship in angle and radians
+            
+            ship_angle = font.render("Angle " + str(self.ship.angle), 2, (255,255,0))
+            self.screen.blit(ship_angle, (0, 28))
+            ship_radians = font.render("Radians " + str(self.ship.radians), 2, (255,255,0))
+            self.screen.blit(ship_radians, (0, 14))
+            
+            pygame.display.flip()
+
+            
 
 
 if __name__ == '__main__':
