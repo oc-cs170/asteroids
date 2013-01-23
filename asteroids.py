@@ -64,6 +64,8 @@ class Asteroids(object):
         self.ship = Ship(self.screen)
         self.hero = pygame.sprite.Group()
         # self.hero.add(self.ship)
+
+        
         self.asteroids = []
         for i in range(5):
             self.asteroids.append(Asteroid(self.screen.get_size()))
@@ -78,12 +80,23 @@ class Asteroids(object):
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     running = False
                     break
+
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.ship.turnLeft()
                     if event.key == pygame.K_RIGHT:
                         self.ship.turnRight()
+                    if event.key == pygame.K_UP:
+                        self.ship.thrust()
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_UP:
+                        self.ship.stop()
 
+                # if event.type == pygame.KEYUP:
+                #     if event.key == pygame.K_LEFT:
+                #         self
+                #     if event.type == pygame.K_RIGHT:
 
             # Draw the scene
             self.screen.blit(self.background, (0, 0))
@@ -94,6 +107,7 @@ class Asteroids(object):
                 asteroid.update()
 
             pygame.display.flip()
+
 
             # Update ship
             self.ship.update()

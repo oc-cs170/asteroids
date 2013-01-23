@@ -34,8 +34,9 @@ class Ship(pygame.sprite.Sprite):
         self.angle = 0  # Initial angle is cartesian coordinates 0
 
         # Movement
-        self.vx = 1
+        self.vx = 0
         self.vy = 0
+
 
     def update(self):
         """Update the position and orientation of the ship.
@@ -65,13 +66,23 @@ class Ship(pygame.sprite.Sprite):
         # The rect is a rectangle centered on the x, y of the ship
         self.rect = self.image.get_rect(center=self.rect.center)
 
+
     def turnLeft(self):
         self.angle += 15
         if self.angle > 360:
-            self.angle = 15
+            self.angle += 15
+
 
     def turnRight(self):
         self.angle -= 15 
         if self.angle < 0:
             self.angle = 345
 
+
+    def thrust(self):
+        self.vx = -3
+        self.vy = -1
+
+    def stop(self):
+        self.vx = 0
+        self.vy = 0
