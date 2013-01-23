@@ -76,10 +76,11 @@ class Asteroids(object):
         self.asteroids.append(Asteroid(self.screen.get_size(), 2))
         
         self.bullets = []
-        
+        self.score = 0
         # For on screen text
         font = pygame.font.SysFont("monospace", 15)
         
+        shot = False
         running = True
         while running:
             self.clock.tick(30)  # Max frames per second
@@ -97,7 +98,10 @@ class Asteroids(object):
                 if event.key == pygame.K_UP:
                     self.moving = .5
                 if event.key == pygame.K_SPACE:
-                    self.bullets.append(Bullet(self.screen.get_size(), self.ship.angle, self.ship.rect.center))
+                    if not shot:
+                        if len(self.bullets) < 3:
+                            self.bullets.append(Bullet(self.screen.get_size(), self.ship.angle, self.ship.rect.center))
+                        shot = True
         
         
             if event.type == pygame.KEYUP:
@@ -105,6 +109,8 @@ class Asteroids(object):
                     self.angle = 0
                 if event.key == pygame.K_UP:
                     self.moving = 0
+                if event.key == pygame.K_SPACE:
+                    shot = False
             
             # Draw the scene
             self.screen.blit(self.background, (0, 0))
@@ -117,8 +123,15 @@ class Asteroids(object):
                     self.bullets.remove(bullet)
                 contact = bullet.rect.collidelist(self.asteroids)
                 if  contact >= 0:
-                    del self.asteroids[contact]
                     self.bullets.remove(bullet)
+                    asteroid = self.asteroids[contact]
+                    size = asteroid.size - 1
+                    self.score += {0: 100, 1: 50, 2: 25}[size]
+                    location = asteroid.rect.center
+                    del self.asteroids[contact]
+                    if size:
+                        self.asteroids.append(Asteroid(self.screen.get_size(), size, location))
+                        self.asteroids.append(Asteroid(self.screen.get_size(), size, location))
                     
             for asteroid in self.asteroids:
                 self.screen.blit(asteroid.image, asteroid.rect)
@@ -142,6 +155,8 @@ class Asteroids(object):
             self.screen.blit(ship_angle, (0, 28))
             ship_radians = font.render("Radians " + str(self.ship.radians), 2, (255,255,0))
             self.screen.blit(ship_radians, (0, 14))
+            scoreboard = font.render(str(self.score), 2, (255, 255, 0))
+            self.screen.blit(scoreboard, (WINDOW_WIDTH - scoreboard.get_width(), 14))
             
             pygame.display.flip()
 

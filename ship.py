@@ -61,7 +61,7 @@ class Ship(pygame.sprite.Sprite):
             yv += self.yv
             theta = math.atan2(yv, xv)
             self.velocity = math.sqrt(xv**2 + yv**2)
-            self.velocity = min(self.velocity, 20)
+            self.velocity = min(self.velocity, 12)
             self.xv = self.velocity * math.cos(theta)
             self.yv = self.velocity * math.sin(theta)
         

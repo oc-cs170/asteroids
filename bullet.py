@@ -25,11 +25,11 @@ class Bullet(pygame.sprite.Sprite):
         
     def update(self):
         radians = math.radians(self.angle)
-        xv = 25 * math.cos(radians)
-        yv = 25 * math.sin(radians)
+        xv = 20 * math.cos(radians)
+        yv = 20 * math.sin(radians)
         
         self.distance += math.sqrt(xv**2 + yv**2)
-        if self.distance > self.screen_width * .75:
+        if self.distance > self.screen_height * .75:
             return True
         self.rect.move_ip(xv, -yv)
         
