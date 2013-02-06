@@ -17,7 +17,8 @@ class Ship(pygame.sprite.Sprite):
             screen: a pygame surface, a pointer to the display buffer
         """
         # Call inherited initialization
-        super(pygame.sprite.Sprite, self).__init__()
+        # super(pygame.sprite.Sprite, self).__init__()
+        pygame.sprite.Sprite.__init__(self)
 
         # Establish the size and location of the ship
         self.rect = pygame.Rect(0, 0, 35, 21)
@@ -39,8 +40,10 @@ class Ship(pygame.sprite.Sprite):
         self.velocity = 0
         self.xv = 0
         self.yv = 0
+        self.av = 0
+        self.moving = 0
 
-    def update(self, angle, moving):
+    def update(self):
         """Update the position and orientation of the ship.
 
         Should be called every frame, by the main game loop to allow the
@@ -48,15 +51,15 @@ class Ship(pygame.sprite.Sprite):
         rotation (0 degrees = 3 o'clock).
         """
          
-        self.angle += angle
+        self.angle += self.av
         if self.angle < 0:
             self.angle += 360
         elif self.angle == 360:
             self.angle = 0 
         self.radians = math.radians(self.angle)
-        if moving:
-            xv = moving * math.cos(self.radians)
-            yv = moving * math.sin(self.radians)
+        if self.moving:
+            xv = self.moving * math.cos(self.radians)
+            yv = self.moving * math.sin(self.radians)
             xv += self.xv
             yv += self.yv
             theta = math.atan2(yv, xv)

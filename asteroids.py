@@ -67,13 +67,16 @@ class Asteroids(object):
         """
         # Game objects
         self.ship = Ship(self.screen)
-        self.bullets = []
         self.hero = pygame.sprite.Group()
-        # self.hero.add(self.ship)
-        self.asteroids = []
-        for i in range(3):
-            self.asteroids.append(Asteroid(self.screen.get_size()))
-        self.asteroids.append(Asteroid(self.screen.get_size(), 2))
+        self.hero.add(self.ship)
+
+        rocks = [Asteroid(self.screen.get_size()) for i in range(3)]
+        # for i in range(3):
+        #     self.asteroids.append(Asteroid(self.screen.get_size()))
+        rocks.append(Asteroid(self.screen.get_size(), 2))
+        # self.asteroids.append(Asteroid(self.screen.get_size(), 2))
+
+        self.asteroids = pygame.sprite.Group(rocks)
         
         self.bullets = []
         
@@ -91,25 +94,25 @@ class Asteroids(object):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    self.angle = -10
+                    self.ship.av = -10
                 if event.key == pygame.K_LEFT:
-                    self.angle = 10
+                    self.ship.av = 10
                 if event.key == pygame.K_UP:
-                    self.moving = .5
+                    self.ship.moving = .5
                 if event.key == pygame.K_SPACE:
                     self.bullets.append(Bullet(self.screen.get_size(), self.ship.angle, self.ship.rect.center))
         
         
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT or  event.key == pygame.K_LEFT:
-                    self.angle = 0
+                    self.ship.av = 0
                 if event.key == pygame.K_UP:
-                    self.moving = 0
+                    self.ship.moving = 0
             
             # Draw the scene
             self.screen.blit(self.background, (0, 0))
-            # self.hero.draw(self.screen)
-            self.screen.blit(self.ship.image, self.ship.rect)
+            self.hero.draw(self.screen)
+            # self.screen.blit(self.ship.image, self.ship.rect)
             
             for bullet in self.bullets:
                 self.screen.blit(bullet.art,bullet.rect)
@@ -119,21 +122,25 @@ class Asteroids(object):
                 if  contact >= 0:
                     del self.asteroids[contact]
                     self.bullets.remove(bullet)
-                    
-            for asteroid in self.asteroids:
-                self.screen.blit(asteroid.image, asteroid.rect)
-                asteroid.update()
-                # If asteroid collides with the ship
-                if asteroid.rect.colliderect(self.ship.rect):
-                    self.screen.blit(font.render("BOOM", 2, (255,255,0)), (512,384))
+
+            self.asteroids.update()
+            self.asteroids.draw(self.screen)
+            pygame.sprite.groupcollide(self.hero, self.asteroids, True, False)
+
+            # for asteroid in self.asteroids:
+            #     self.screen.blit(asteroid.image, asteroid.rect)
+            #     asteroid.update()
+            #     # If asteroid collides with the ship
+            #     if asteroid.rect.colliderect(self.ship.rect):
+            #         self.screen.blit(font.render("BOOM", 2, (255,255,0)), (512,384))
             
             # Update ship
-            self.ship.update(self.angle, self.moving)
-            
-            for asteroid in self.asteroids:
-                if self.ship.rect.colliderect(asteroid.rect):
-                    self.screen.blit(font.render("BOOM", 2, (255,255,0)), (512,384))
-                    # running = False
+            self.hero.update()
+
+            # for asteroid in self.asteroids:
+            #     if self.ship.rect.colliderect(asteroid.rect):
+            #         self.screen.blit(font.render("BOOM", 2, (255,255,0)), (512,384))
+            #         # running = False
                 
                 
             #Displays direction of ship in angle and radians
