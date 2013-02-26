@@ -16,7 +16,8 @@ class Asteroid(pygame.sprite.Sprite):
             size: an int (optional), ranging from 1-3 to determine asteroid size
         """
         # Call inherited initialization
-        super(pygame.sprite.Sprite, self).__init__()
+        # super(pygame.sprite.Sprite, self).__init__()
+        pygame.sprite.Sprite.__init__(self)
 
         # Creation parameters
         self.screen_width, self.screen_height = screen_size
