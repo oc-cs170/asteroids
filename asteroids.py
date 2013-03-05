@@ -42,17 +42,7 @@ class Asteroids(object):
     # Use a clock to control frame rate
         self.clock = pygame.time.Clock()
 
-    def splash_screen(self):
-        font = pygame.font.SysFont("monospace", 15)
-
-        screen_font = self.font.render("PLAY ASTEROIDS", 2, (255,255,0))
-        intro_screen = self.screen.copy()
-        intro_screen.fill(pygame.Color('Black'))
-           
-        pygame.display.flip()
-        pygame.time.wait(3000)
-        self.create_background()   
-        
+   
 
     def create_background(self, width, height):
         """A black background, filled with stars... The Final Frontier.
@@ -86,6 +76,7 @@ class Asteroids(object):
         self.ship = Ship(self.screen)
         self.hero = pygame.sprite.Group()
         self.hero.add(self.ship)
+        
         
 
         rocks = [Asteroid(self.screen.get_size()) for i in range(3)]
@@ -128,7 +119,7 @@ class Asteroids(object):
                     self.ship.moving = 0
             
             # Draw the scene
-            self.screen.blit(self.splash_screen)
+            
             self.screen.blit(self.background, (0, 0))
             self.hero.draw(self.screen)
             # self.screen.blit(self.ship.image, self.ship.rect)
